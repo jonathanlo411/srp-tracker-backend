@@ -1,1 +1,6 @@
+# Virtual Environments
 .env
+.venv
+
+# Python runtime
+__pycache__
