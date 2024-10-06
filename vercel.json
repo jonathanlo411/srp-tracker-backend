@@ -1,0 +1,14 @@
+{
+    "version": 2,
+    "builds": [
+      { "src": "api/app.py", "use": "@vercel/python" },
+      { "src": "cron/leaderboardScraper.py", "use": "@vercel/python" }
+    ],
+    "routes": [
+      { "src": "/(.*)", "dest": "api/app.py" }
+    ],
+    "cron": [
+      { "path": "/cron/leaderboardScraper", "schedule": "0 0 * * *" }
+    ]
+  }
+  
