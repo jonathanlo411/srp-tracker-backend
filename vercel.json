@@ -7,7 +7,7 @@
     "routes": [
       { "src": "/(.*)", "dest": "api/app.py" }
     ],
-    "cron": [
+    "crons": [
       { "path": "/cron/leaderboardScraper", "schedule": "0 0 * * *" }
     ]
   }
