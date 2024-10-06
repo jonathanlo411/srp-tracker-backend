@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "rewrites": [{ "source": "/(.*)", "destination": "/api/search" }],
+    "rewrites": [{ "source": "/(.*)", "destination": "/api/app" }],
     "crons": [
         { "path": "/cron/leaderboardScraper", "schedule": "0 0 * * *" }
     ]
