@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRP Tracker API Docs</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+    <script src="{{url_for('static', filename='app.js')}}" defer></script>
+    <link rel="icon" href="{{url_for('static', filename='imgs/favicon.png')}}" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F5RG9Q9Z4B"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-F5RG9Q9Z4B');
+    </script>
+</head>
+<body>
+    <section>
+        <div id="title-block" class="blocks">
+            <h1>SRP Tracker API Documentation</h1>
+            <p>SRP Tracker is a webapp used to track various data on <a rel="noreferrer" target="_blank" href="https://hub.shutokorevivalproject.com/timing">the official SRP timing leaderboards</a>. Currently, it is tracking point leaderboard changes. The SRP Tracker API is <b>entirely public</b> and <b>free to use</b> provided the following:
+            <ol>
+                <li>You <b>MUST</b> credit SRP Tracker and/or Jonathan Lo.</li>
+                <li>You <b>CANNOT</b> run ads or paid services.</li>
+                <li>You <b>CANNOT</b> exceed a limit of 2 requests per second per IP address.</li>
+            </ol>
+            </p>
+        </div>
+        <div id="api-block" class="blocks">
+            <h2>API Reference</h2>
+
+            <div class="api-block">
+                <h3>/status</h3>
+                <p><strong>Method:</strong> GET</p>
+                <p><strong>Description:</strong> Handles requests to the <code>/status</code> endpoint. This endpoint can be used to check the health of the server. It responds with a message indicating that the server is running.</p>
+                
+                <h4>Responses:</h4>
+                <h5>200 OK</h5>
+                <pre><code>{
+    "msg": "Status OK, server is running"
+}</code></pre>
+            </div>
+
+            <div class="api-block">
+                <h3>/leaderboard</h3>
+                <p><strong>Method:</strong> GET</p>
+                <p><strong>Description:</strong> Retrieves the leaderboard data from the MongoDB collection. This endpoint fetches documents from the leaderboard collection, filtered by a required leaderboard identifier provided as a query parameter.</p>
+                
+                <h4>Query Parameters:</h4>
+                <div class="query-parameter">
+                    <strong>leaderboard</strong> (string, required) - A required query parameter to filter the leaderboard data based on its identifier.
+                </div>
+                
+                <h4>Responses:</h4>
+                <h5>200 OK</h5>
+                <pre><code>[
+  {
+    "data": [
+      {
+        "name": "Jonathan",
+        "points": 4237,
+        "rank": 1
+      },
+      {
+        "name": "OFFIS",
+        "points": 3963,
+        "rank": 2
+      },
+      ...
+    ],
+    "datetime": "Sun, 06 Oct 2024 19:32:36 GMT",
+    "leaderboard": "Combined"
+  },
+  {
+    "data": [
+      {
+        "name": "Jonathan",
+        "points": 4237,
+        "rank": 1
+      },
+      {
+        "name": "OFFIS",
+        "points": 3963,
+        "rank": 2
+      },
+      ...
+    ],
+    "datetime": "Monday, 07 Oct 2024 19:32:36 GMT",
+    "leaderboard": "Combined"
+  }
+]</code></pre>
+                <h5>400 Bad Request</h5>
+                <pre><code>{
+    "error": "The 'leaderboard' query parameter is required."
+}</code></pre>
+
+                <h5>404 Not Found</h5>
+                <pre><code>{
+    "data": []
+}</code></pre>
+            </div>
+
+        </div>
+    </section>
+</body>
+</html>

@@ -1,5 +1,5 @@
 # Imports
-from flask import Flask, request, Response
+from flask import Flask, request, Response, redirect, url_for, render_template
 from dotenv import load_dotenv
 from os import getenv
 from pymongo import MongoClient
@@ -21,6 +21,39 @@ LEADERBOARDS = [
     'Traffic',
     'TrafficSlow'
 ]
+
+
+@app.route('/')
+def root() -> Response:
+    """
+    Handles requests to the root endpoint.
+
+    This endpoint redirects users to the /docs endpoint, where documentation can be found.
+
+    Methods:
+        GET: Redirects to the /docs endpoint.
+
+    Returns:
+        Response: A redirect response to the /docs URL.
+    """
+    return redirect(url_for('docs'))
+
+
+@app.route('/docs')
+def docs() -> Response:
+    """
+    Handles requests to the /docs endpoint.
+
+    This endpoint serves the main documentation page.
+
+    Methods:
+        GET: Renders the index.html template for documentation.
+
+    Returns:
+        Response: The rendered HTML page containing the documentation.
+    """
+    return render_template('index.html')
+
 
 # --- APIs ---
 @app.route('/status', methods=['GET'])
