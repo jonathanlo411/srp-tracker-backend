@@ -1,5 +1,6 @@
 # Imports
 from flask import Flask, request, Response, redirect, url_for, render_template
+from flask_cors import CORS
 from dotenv import load_dotenv
 from os import getenv
 from pymongo import MongoClient
@@ -11,6 +12,7 @@ MONGO_CLIENT = MongoClient(getenv('MONGO_CONNECTION'))
 DATABASE = MONGO_CLIENT[getenv('MONGO_DB_NAME')]
 COLLECTION = DATABASE[getenv('MONGO_COLLECTION_NAME')]
 app = Flask(__name__)
+CORS(app)
 
 
 # Globals
