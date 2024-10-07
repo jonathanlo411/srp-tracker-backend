@@ -5,6 +5,10 @@
     ],
     "crons": [
         { "path": "/cron/leaderboardPointsCrawler", "schedule": "0 0 * * *" }
-    ]
+    ],
+    "functions": {
+        "api/app.py": {
+            "maxDuration": 60
+        }
+    }
 }
-  
