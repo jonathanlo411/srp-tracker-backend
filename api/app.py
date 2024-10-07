@@ -2,15 +2,20 @@
 from flask import Flask, request, Response, redirect, url_for, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
-from os import getenv
+import os
+import sys
 from pymongo import MongoClient
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) # to detect /cron
+
+# Crons
+from cron.leaderboardPointsCrawler import leaderboard_scraper
 
 
 # Setup
 load_dotenv()
-MONGO_CLIENT = MongoClient(getenv('MONGO_CONNECTION'))
-DATABASE = MONGO_CLIENT[getenv('MONGO_DB_NAME')]
-COLLECTION = DATABASE[getenv('MONGO_COLLECTION_NAME')]
+MONGO_CLIENT = MongoClient(os.getenv('MONGO_CONNECTION'))
+DATABASE = MONGO_CLIENT[os.getenv('MONGO_DB_NAME')]
+COLLECTION = DATABASE[os.getenv('MONGO_COLLECTION_NAME')]
 app = Flask(__name__)
 CORS(app)
 
@@ -23,6 +28,7 @@ LEADERBOARDS = [
     'Traffic',
     'TrafficSlow'
 ]
+CRON_SECRET = os.getenv('CRON_SECRET')
 
 
 @app.route('/')
@@ -55,6 +61,13 @@ def docs() -> Response:
         Response: The rendered HTML page containing the documentation.
     """
     return render_template('index.html')
+
+
+# --- Cron ---
+@app.route('/cron/leaderboardPointsCrawler', methods=['GET'])
+def cron_leaderboardPointsCrawler():
+    if not authenticate_cron(): return {"error": "Unauthorized access"}, 401
+    return leaderboard_scraper()
 
 
 # --- APIs ---
@@ -107,3 +120,20 @@ def get_leaderboard() -> Response:
         return leaderboard_data, 200
     else:
         return {"data": []}, 404  # No data found
+    
+
+# --- Util ---
+def authenticate_cron() -> bool:
+    """
+    Authenticates the cron job by verifying the Authorization header.
+
+    Returns:
+        bool: True if the request is authenticated, False otherwise.
+    """
+    auth_header = request.headers.get('Authorization')
+
+    # Check if Authorization header exists and matches the CRON_SECRET
+    if auth_header and CRON_SECRET:
+        token = auth_header.split("Bearer ")[-1]  # Extract token after "Bearer"
+        return token == CRON_SECRET
+    return False

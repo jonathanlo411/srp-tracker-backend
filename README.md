@@ -19,7 +19,7 @@ pip install -r requirements.txt
 flask --app api/app run --debug
 
 # For Cron script
-python cron/leaderboardScraper.py
+python cron/leaderboardPointsCrawler.py
 ```
 
 ## License
